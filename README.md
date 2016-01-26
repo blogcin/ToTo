@@ -1,6 +1,6 @@
 # ToTo
 
-ToTo is a simple proxy server wrriten in Go Language
+ToTo is a simple proxy server written in Go Language
 
   - light!
   - easy to use!
