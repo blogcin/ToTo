@@ -89,7 +89,7 @@ func main() {
 
 	connections := proxyServer.acceptClient(server)
 
-	go proxyServer.connectHost(<-connections)
-
-	fmt.Scanln()
+	for {
+		go proxyServer.connectHost(<-connections)
+	}
 }
