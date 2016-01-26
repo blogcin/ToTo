@@ -71,13 +71,14 @@ func (ps *ProxyServer) getHeader(client net.Conn) {
 	buffer := make([]byte, bufferLength)
 	client.Read(buffer)
 
-	fmt.Println(byteArrtoStr(buffer))
+	fmt.Println(buffer)
 }
 
+/*
 func byteArrtoStr(byteArray []byte) string{
 	return string(byteArray[:])
 }
-
+*/
 func main() {
 	proxyServer := &ProxyServer{}
 
