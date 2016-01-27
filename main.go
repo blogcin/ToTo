@@ -84,7 +84,7 @@ func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 
 	if(bytearray[0] == 0) {
 		fmt.Println("ps: splitHeader: Couldn't get httpheader, zero filter")
-		result[0] = -1
+		result[0] = string("-1")
 		return result
 	}
 
