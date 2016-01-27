@@ -13,6 +13,7 @@ import (
 
 const (
 	bufferLength = 8192
+	headerLine = 30
 )
 
 type ProxyServer struct {
@@ -71,8 +72,42 @@ func (ps *ProxyServer) getHeader(client net.Conn) {
 	buffer := make([]byte, bufferLength)
 	client.Read(buffer)
 
-	fmt.Println(buffer)
+
+	fmt.Println(ps.splitHeader(buffer)[0])
 }
+
+func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
+
+	result := make([]string, headerLine)
+	j := 0
+	temp := false
+
+	if(bytearray[0] == 0) {
+		fmt.Println("ps: splitHeader: Couldn't get httpheader, zero filter")
+		result[0] = -1
+		return result
+	}
+
+	for index, element := range bytearray {
+		if(element == 13) {
+			if(bytearray[index+1] == 10) {
+				temp = true
+			}
+		}
+
+		if(temp != true) {
+			result[j] += string(element)
+		}
+
+		if(element == 10) {
+			temp = false
+			j += 1
+		}
+	}
+
+	return result;
+}
+
 
 /*
 func byteArrtoStr(byteArray []byte) string{
