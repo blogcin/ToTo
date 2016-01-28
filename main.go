@@ -49,7 +49,7 @@ func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn{
 		for {
 			client, err := server.Accept()
 			if client == nil {
-				fmt.Printf("ps: acceptClient: Couldn't accept : " + err.Error())
+				fmt.Println("ps: acceptClient: Couldn't accept : ", err.Error())
 				continue
 			}
 			channel <- client
