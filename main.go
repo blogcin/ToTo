@@ -61,19 +61,12 @@ func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn{
 	return channel
 }
 
-func (ps *ProxyServer) test(connectionHost net.Conn, client net.Conn, Datas []byte) {
-	client.Read(Datas)
-	connectionHost.Write(Datas)
-}
-
 func (ps *ProxyServer) connectHost(client net.Conn) {
 	HeaderInfo, Datas := ps.getData(client)
-	//var i int
 
 	if(Datas[0] == 0 ) || (HeaderInfo == "-1"){
 		return
 	}
-	//buffers := make([]byte, bufferLength)
 
 	requestType, host, _, port := ps.parseHttpHeaderMethod(HeaderInfo)
 
