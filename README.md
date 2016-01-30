@@ -6,10 +6,10 @@ ToTo is a simple proxy server written in Go Language
   - easy to use!
 
 ### Version
-Work in Progress
+1.0 
 
 ### Progress
-Now possible to get HTTP header. (not parse it yet)
+It works!
 
 ### Clone
 ```sh
