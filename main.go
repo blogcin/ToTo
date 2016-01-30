@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"io"
+	"github.com/mattn/go-gtk/gtk"
+	"github.com/mattn/go-gtk/glib"
 )
 
 const (
@@ -180,7 +182,34 @@ func byteArrtoStr(byteArray []byte) string{
 	return string(byteArray[:])
 }
 */
+
+type guiGTK struct {
+	window *gtk.Window
+}
+
+func (gui *guiGTK) init() {
+	gtk.Init(nil)
+	gui.window = gtk.NewWindow(gtk.WINDOW_TOPLEVEL)
+	gui.window.SetPosition(gtk.WIN_POS_CENTER)
+	gui.window.SetTitle("ToTo")
+	gui.window.SetIconName("gtk-dialog-info")
+	gui.window.Connect("destroy", func(ctx *glib.CallbackContext) {
+        	println("Destroy", ctx.Data().(string))
+        	gtk.MainQuit()
+    	}, )
+}
+
+func (gui *guiGTK) show() {
+	gui.window.ShowAll()
+	gtk.Main()
+}
+
 func main() {
+	guiGTK := &guiGTK{}
+
+	guiGTK.init()
+	guiGTK.show()
+
 	proxyServer := &ProxyServer{}
 
 	port := proxyServer.askPort()
