@@ -10,10 +10,11 @@ import (
 	"net"
 	"strconv"
 	"strings"
+	"io"
 )
 
 const (
-	bufferLength = 15000
+	bufferLength = 8192
 	headerLine = 30
 )
 
@@ -60,23 +61,25 @@ func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn{
 	return channel
 }
 
+func (ps *ProxyServer) test(connectionHost net.Conn, client net.Conn, Datas []byte) {
+	client.Read(Datas)
+	connectionHost.Write(Datas)
+}
+
 func (ps *ProxyServer) connectHost(client net.Conn) {
 	HeaderInfo, Datas := ps.getData(client)
+	//var i int
 
 	if(Datas[0] == 0 ) || (HeaderInfo == "-1"){
 		return
 	}
 	//buffers := make([]byte, bufferLength)
 
-	requestType, host, protocol, port := ps.parseHttpHeaderMethod(HeaderInfo)
+	requestType, host, _, port := ps.parseHttpHeaderMethod(HeaderInfo)
 
 	if(port == -1) {
 		return
 	}
-	fmt.Println("Request Type : ", requestType)
-	fmt.Println("HOST : ", host)
-	fmt.Println("Protocol : ", protocol)
-	fmt.Println("Port : ", port)
 
 	connectionHost, _ := net.Dial("tcp", host + ":"+ strconv.Itoa(port))
 
@@ -84,27 +87,16 @@ func (ps *ProxyServer) connectHost(client net.Conn) {
 		connectionHost.Write([]byte("HTTP/1.1 200 Connection established\n"))
 	} else {
 		connectionHost.Write(Datas)
-		fmt.Println("connectionHost.Write(Datas)")
-		for {
-			connectionHost.Read(Datas)
-			fmt.Println("connectionHost.Read(Datas)")
-			client.Write(Datas)
-			fmt.Println("client.Write(Datas)")
-			client.Read(Datas)
-			fmt.Println("client.Read(Datas)")
-			connectionHost.Write(Datas)
-			fmt.Println("connectionHost.Write(Datas)")
-
-		}
+		go func() {
+			io.Copy(connectionHost, client)
+		}()
+		io.Copy(client, connectionHost)
 	}
+	client.Close()
 	connectionHost.Close()
 	return
-
-	//io.Copy(Datas, connectionHost)
-	// Get Header
-	//fmt.Println(string(buffer[:]))
-	//
 }
+
 /*
 Get first line of Http header
  */
@@ -170,8 +162,8 @@ func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 	}
 
 	for index, element := range bytearray {
-		if(element == 13) {
-			if(bytearray[index+1] == 10) {
+		if(element == '\r') {
+			if(bytearray[index+1] == '\n') {
 				temp = true
 			}
 		}
@@ -180,7 +172,7 @@ func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 			result[j] += string(element)
 		}
 
-		if(element == 10) {
+		if(element == '\n') {
 			temp = false
 			j += 1
 		}
