@@ -22,6 +22,10 @@ $ go run main.go
 ```
 Execute and enter the port on intermediate computer(to circumvent), set proxy setting on your program (like browser, messenger if that support proxy setting)
 
+[Picture1](https://raw.githubusercontent.com/blogcin/ToTo/master/image/capture.png)
+---
+[Picture2](https://raw.githubusercontent.com/blogcin/ToTo/master/image/capture2.png)
+---
 ### Contribute
 ---
 Just pull-request to me!
