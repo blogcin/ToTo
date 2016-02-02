@@ -24,7 +24,7 @@ Execute and enter the port on intermediate computer(to circumvent), set proxy se
 
 [Picture1](https://raw.githubusercontent.com/blogcin/ToTo/master/image/capture.png)
 ---
-[Picture2](https://raw.githubusercontent.com/blogcin/ToTo/master/image/capture2.png)
+[Picture2](https://raw.githubusercontent.com/blogcin/ToTo/master/image/capture2.PNG)
 ---
 ### Contribute
 ---
