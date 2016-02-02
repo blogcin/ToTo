@@ -33,7 +33,7 @@ func (ps *ProxyServer) askPort() int {
 	return port
 }
 
-// initialize socket server 
+// initialize socket server
 func (ps *ProxyServer) init(port int) net.Listener {
 	ps.port = ":"
 	ps.port += strconv.Itoa(port)
@@ -47,7 +47,7 @@ func (ps *ProxyServer) init(port int) net.Listener {
 	return server
 }
 
-// accept client 
+// accept client
 func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn {
 	channel := make(chan net.Conn)
 
