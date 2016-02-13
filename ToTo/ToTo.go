@@ -1,9 +1,4 @@
-package main
-
-/*
- * ToTo - Go language proxy server
- * Song Hyeon Sik <blogcin@naver.com> 2016
- */
+package ToTo
 
 import (
 	"fmt"
@@ -19,12 +14,12 @@ const (
 )
 
 // ProxyServer stores the configuration for ProxyServer and some functions.
-type ProxyServer struct {
+type ToTo struct {
 	port string
 }
 
 // ask port
-func (ps *ProxyServer) askPort() int {
+func (ps *ToTo) askPort() int {
 	port := 0
 
 	fmt.Print("Port : ")
@@ -34,7 +29,7 @@ func (ps *ProxyServer) askPort() int {
 }
 
 // initialize socket server
-func (ps *ProxyServer) init(port int) net.Listener {
+func (ps *ToTo) init(port int) net.Listener {
 	ps.port = ":"
 	ps.port += strconv.Itoa(port)
 
@@ -48,7 +43,7 @@ func (ps *ProxyServer) init(port int) net.Listener {
 }
 
 // accept client
-func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn {
+func (ps *ToTo) acceptClient(server net.Listener) chan net.Conn {
 	channel := make(chan net.Conn)
 
 	go func() {
@@ -66,7 +61,7 @@ func (ps *ProxyServer) acceptClient(server net.Listener) chan net.Conn {
 }
 
 // connect host by socket
-func (ps *ProxyServer) connectHost(client net.Conn) {
+func (ps *ToTo) connectHost(client net.Conn) {
 	HeaderInfo, Datas := ps.getData(client)
 
 	if (Datas[0] == 0) || (HeaderInfo == "-1") {
@@ -95,7 +90,7 @@ func (ps *ProxyServer) connectHost(client net.Conn) {
 }
 
 // Get first line of http header
-func (ps *ProxyServer) getData(client net.Conn) (string, []byte) {
+func (ps *ToTo) getData(client net.Conn) (string, []byte) {
 
 	buffer := make([]byte, bufferLength)
 	client.Read(buffer)
@@ -104,7 +99,7 @@ func (ps *ProxyServer) getData(client net.Conn) (string, []byte) {
 }
 
 // parse HTTPHeader from packets
-func (ps *ProxyServer) parseHTTPHeaderMethod(headerMethod string) (string, string, string, int) {
+func (ps *ToTo) parseHTTPHeaderMethod(headerMethod string) (string, string, string, int) {
 	var (
 		requestType string
 		host        string
@@ -150,7 +145,7 @@ func (ps *ProxyServer) parseHTTPHeaderMethod(headerMethod string) (string, strin
 }
 
 // split header each lines
-func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
+func (ps *ToTo) splitHeader(bytearray []byte) []string {
 
 	result := make([]string, headerLine)
 	j := 0
@@ -180,19 +175,4 @@ func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 	}
 
 	return result
-}
-
-func main() {
-	proxyServer := &ProxyServer{}
-
-	port := proxyServer.askPort()
-
-	server := proxyServer.init(port)
-	defer server.Close()
-
-	connections := proxyServer.acceptClient(server)
-
-	for {
-		go proxyServer.connectHost(<-connections)
-	}
 }
