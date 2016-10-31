@@ -153,7 +153,7 @@ func (ps *ProxyServer) parseHTTPHeaderMethod(headerMethod string) (string, strin
 func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 
 	result := make([]string, headerLine)
-	j := 0
+	lineNumber := 0
 	temp := false
 
 	if bytearray[0] == 0 {
@@ -170,12 +170,12 @@ func (ps *ProxyServer) splitHeader(bytearray []byte) []string {
 		}
 
 		if temp != true {
-			result[j] += string(element)
+			result[lineNumber] += string(element)
 		}
 
 		if element == '\n' {
 			temp = false
-			j++
+			lineNumber++
 		}
 	}
 
